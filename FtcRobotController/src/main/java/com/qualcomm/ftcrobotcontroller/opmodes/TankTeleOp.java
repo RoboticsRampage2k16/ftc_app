@@ -24,10 +24,12 @@ public class TankTeleOp extends OpMode {
     //pos of the joySticks
     double leftYpos = 0;
     double rightYpos = 0;
-    //pull power
-    double motorPullPower = 0;
     //filter term used to determine how sensitive we want the joysticks to be
     double joyFilter = (double) 0;
+
+    int driveRefresh = 10;
+
+    boolean recording = false;
 
     @Override
     public void init() {
@@ -44,8 +46,17 @@ public class TankTeleOp extends OpMode {
             stop();
         }
     }
+    private void toggleBool(){
+
+    }
 
     public void readJoys() {
+        if (gamepad1.back) stop();
+        if (gamepad1.start) {
+            while(gamepad1.start){wait(5);}
+            recording = !recording;
+            this.resetStartTime();
+        }
         leftYpos = gamepad1.left_stick_y / 2;
         rightYpos = gamepad1.right_stick_y / 2;
 
@@ -63,19 +74,18 @@ public class TankTeleOp extends OpMode {
         motorRight.setPower(rightPower);
 
     }
+    public void recordState(){
+
+    }
 
     public void dispData() {
-        //simple output to the driver's station for debugging
-        //telemetry.addData(double.toString(leftPower), "Left Power");
-        //telemetry.addData(double.toString(rightPower), "Right Power");
     }
 
     public void loop() {
-        //stop program on back button press
-        if (gamepad1.back) stop();
         readJoys();
         setRobot();
+        if (recording) recordState();
         dispData();
-        wait(10);
+        wait(driveRefresh);
     }
 }

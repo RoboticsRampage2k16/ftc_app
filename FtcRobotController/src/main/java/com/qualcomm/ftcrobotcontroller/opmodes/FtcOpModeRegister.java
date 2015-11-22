@@ -10,6 +10,7 @@ public class FtcOpModeRegister implements OpModeRegister {
   public void register(OpModeManager manager) {
 
     manager.register("TankTeleOp", TankTeleOp.class);
+    manager.register("JoyStickTest", JoyStickTest.class);
     
   }
 }
