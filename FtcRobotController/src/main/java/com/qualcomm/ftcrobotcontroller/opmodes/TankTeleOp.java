@@ -2,7 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
+
 
 
 public class TankTeleOp extends OpMode {
@@ -10,35 +10,41 @@ public class TankTeleOp extends OpMode {
     public TankTeleOp() {
     }
 
-    @Override
-    public void stop() {
-    }
-
     //variable decleration
     //declaration of the motorObjects
     DcMotor motorRight;
     DcMotor motorLeft;
+    DcMotor motorPull;
     //powers of the motors
     double leftPower = 0;
     double rightPower = 0;
+    double pullPower = 0;
     //pos of the joySticks
     double leftYpos = 0;
     double rightYpos = 0;
     //filter term used to determine how sensitive we want the joysticks to be
-    double joyFilter = (double) 0;
+    double joyFilter = (double) .1;
 
+    //speedControl
+    double speedGov = .5;
+    double govCorrect = 0;
+
+    //refresh rate
     int driveRefresh = 10;
 
-    boolean recording = false;
 
     @Override
     public void init() {
+        //getting names fom config file
         motorRight = hardwareMap.dcMotor.get("motorRight");
         motorLeft = hardwareMap.dcMotor.get("motorLeft");
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorPull = hardwareMap.dcMotor.get("motorPull");
+        motorPull.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    public void wait(int waitTime) {
+    //cheap wait function
+    private void wait(int waitTime) {
         try {
             Thread.sleep(waitTime);
         } catch (InterruptedException e) {
@@ -46,23 +52,29 @@ public class TankTeleOp extends OpMode {
             stop();
         }
     }
-    private void toggleBool(){
-
-    }
 
     public void readJoys() {
+        //stop robot
         if (gamepad1.back) stop();
-        if (gamepad1.start) {
-            while(gamepad1.start){wait(5);}
-            recording = !recording;
-            this.resetStartTime();
+        //front wheel spin control
+        while(gamepad1.y){
+            pullPower += .01;
+            wait(500);
         }
-        leftYpos = gamepad1.left_stick_y / 2;
-        rightYpos = gamepad1.right_stick_y / 2;
+        while(gamepad1.x) {
+            pullPower += -.01;
+            wait(500);
+        }
+        if (pullPower < 0) pullPower = 0;
+        if (pullPower > .5) pullPower = .5;
+        //joystick to wheel controls
+        leftYpos = gamepad1.left_stick_y * speedGov;//speed control
+        rightYpos = gamepad1.right_stick_y * speedGov - govCorrect;
 
         if (Math.abs(leftYpos - leftPower) >= joyFilter) {
             leftPower = leftYpos;
         }
+
         if (Math.abs(rightYpos - rightPower) >= joyFilter) {
             rightPower = rightYpos;
         }
@@ -72,9 +84,7 @@ public class TankTeleOp extends OpMode {
         //hardware assignment of power variables
         motorLeft.setPower(leftPower);
         motorRight.setPower(rightPower);
-
-    }
-    public void recordState(){
+        motorPull.setPower(pullPower);
 
     }
 
@@ -84,7 +94,6 @@ public class TankTeleOp extends OpMode {
     public void loop() {
         readJoys();
         setRobot();
-        if (recording) recordState();
         dispData();
         wait(driveRefresh);
     }
