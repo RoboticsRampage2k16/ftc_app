@@ -6,12 +6,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 public class coreProfile extends OpMode {
-    DcMotor motorRight;
     DcMotor motorLeft;
+    DcMotor motorRight;
     DcMotor motorPull;
-    //------------------------
     Servo buttonArm;
-    //------------------------
     ColorSensor lightCalc;
     OpticalDistanceSensor rightDistance;
     OpticalDistanceSensor forwardDistance;
@@ -19,6 +17,7 @@ public class coreProfile extends OpMode {
     double leftPower = 0;
     double rightPower = 0;
     double pullPower = 0;
+    double armPos = 0;
     //------------------------
     public coreProfile(){}//constructor
     public void init() {
@@ -37,5 +36,11 @@ public class coreProfile extends OpMode {
             stop();
         }
     }//cheap wait function
+    public void setRobot() {
+        motorLeft.setPower(leftPower);
+        motorRight.setPower(rightPower);
+        motorPull.setPower(pullPower);
+        buttonArm.setPosition(armPos);
+    } //hardware assign physical vals
     public void loop(){}//fault of app creator
 }
