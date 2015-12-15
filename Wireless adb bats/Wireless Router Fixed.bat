@@ -1,4 +1,5 @@
 @echo off
+set /p IP=IP:
 REM Use this Batch file to wirelessly conenct to an Android Phone for code development
 REM This assumes that you have previously connected your phone to the router, and that you have  
 REM locked in it's IP addresse (so the router assigns the same address each time).  
@@ -17,7 +18,7 @@ Timeout 10
 adb tcpip 5555
 Timeout 5
 REM -----   Edit this line to have your Phones IP
-adb connect 192.168.1.114
+adb connect %IP%
 db devicesset /p ok= --  Unplug the phone and hit Enter to see the final connection.adb devices
 Timeout 5
 

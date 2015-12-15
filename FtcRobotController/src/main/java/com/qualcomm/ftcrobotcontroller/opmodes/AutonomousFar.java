@@ -1,6 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
-public class AutonomousTest extends autoFunc {
-    public double DistPath = 1;
+public class AutonomousFar extends autoFunc {
+    public double DistPath = 10/2;
     public void start(){
         zeroWheelEncoders();
         leftPower = 0;
@@ -11,12 +11,7 @@ public class AutonomousTest extends autoFunc {
 
     public void FIRST(){
         wait(12000);
-        leftPower = .2;
-        rightPower = .2;
-        setRobot();
-        wait(5000);
-        leftPower = 0;
-        rightPower = 0;
-        setRobot();
+        PATH(DistPath, DistPath,.2,1);
+
     }
 }
