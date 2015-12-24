@@ -1,8 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-/**
- * Created by Angry on 11/25/2015.
- */
 public class autoFunc extends coreProfile {
     double distRat = 1;
     int driveRefresh = 10;
@@ -13,7 +10,9 @@ public class autoFunc extends coreProfile {
         motorRight.setPower(mSpeed * sRatio);
         dispData();
     }
+    public void setWheelSpeed(){
 
+    }
     public void zeroWheelEncoders() {
         motorLeft.setTargetPosition(0);
         motorRight.setTargetPosition(0);

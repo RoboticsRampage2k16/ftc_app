@@ -18,11 +18,11 @@ public class TankTeleOp extends coreProfile {
         if (gamepad1.a) leftPos-=servoJerk;
         if (gamepad1.y) leftPos+=servoJerk;
         if (gamepad1.x) rightPos-=servoJerk;
-        if (gamepad1.b) rightPos+=servoJerk;
+        if (gamepad1_down) speedGov -= .01;
+        if (gamepad.b) rightPos+=servoJerk;
         if (gamepad1.dpad_left) rotoPos+=servoJerk;
         if (gamepad1.dpad_right) rotoPos-=servoJerk;
-        if (gamepad1.dpad_down) speedGov -= .01;
-        if (gamepad1.dpad_up) speedGov += .01;
+        if (gamepad1.dpad1.dpad_up) speedGov += .01;
 
         filterVals();
     }//scans gamepad for input
